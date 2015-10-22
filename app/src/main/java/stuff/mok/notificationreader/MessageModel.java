@@ -23,4 +23,12 @@ public class MessageModel {
     public ArrayList<String> getTexts(){
         return texts;
     }
+
+    public String getPackageName(){
+        return packageName;
+    }
+
+    public String getTitle(){
+        return title;
+    }
 }

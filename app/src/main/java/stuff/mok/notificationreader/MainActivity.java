@@ -15,8 +15,10 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 public class MainActivity extends Activity {
-    ListView displayList;
-    HashMap<String, MessageModel> activeNotifications = new HashMap<>();
+    private ListView displayList;
+    private HashMap<String, MessageModel> activeNotifications = new HashMap<>();
+    private MessageModel curMsg;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         displayList = (ListView) findViewById(R.id.displayList);
+        context = this;
 
         LocalBroadcastManager.getInstance(this).registerReceiver(onReceiveMessage, new IntentFilter("Notification Msg"));
     }
@@ -58,17 +61,19 @@ public class MainActivity extends Activity {
                 String title = intent.getStringExtra("title");
                 String text = intent.getStringExtra("text");
 
-                if(!activeNotifications.containsKey(packageName)) {
-                    MessageModel curMsg = new MessageModel(packageName, title, text);
-                    activeNotifications.put(packageName, curMsg);
-                } else {
-                    activeNotifications.get(packageName).getTexts().add(text);
+                if(!packageName.equals("com.android.systemui")) {
+                    if (!activeNotifications.containsKey(packageName)) {
+                        curMsg = new MessageModel(packageName, title, text);
+                        activeNotifications.put(packageName, curMsg);
+                    } else {
+                        activeNotifications.get(packageName).addTextToList(text);
+                    }
                 }
 
-                for(String key : activeNotifications.keySet()){
+                String[] keyArray = activeNotifications.keySet().toArray(new String[activeNotifications.keySet().size()]);
 
-                }
-//                displayView.setText("Package Name: " + packageName + "\nTitle: " + title + "\nMessage: " + text);
+                DisplayListAdapter adapter = new DisplayListAdapter(context, keyArray, activeNotifications);
+                displayList.setAdapter(adapter);
             } else {
                 String packageName = intent.getStringExtra("package");
 
