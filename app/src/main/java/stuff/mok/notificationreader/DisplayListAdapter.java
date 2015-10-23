@@ -39,17 +39,32 @@ public class DisplayListAdapter extends ArrayAdapter<String>{
         MessageModel msg = activeNotifications.get(keys[position]);
 
         packageName.setText(msg.getPackageName());
-        title.setText(msg.getTitle());
+        title.setVisibility(View.GONE);
 
         String messages = "";
 
-        for(int i = 0; i < msg.getTexts().size(); i++){
-            if(i == 0){
-                messages = msg.getTexts().get(i);
+        for(String s : msg.getTitles()){
+            if(messages.equals("")) {
+                messages = messages + s;
             } else {
-                messages = messages + "\n" + msg.getTexts().get(i);
+                messages = messages + "\n\n" + s;
+            }
+
+            for(int i = 0; i < msg.getTexts(s).size(); i++) {
+                messages = messages + "\n" + msg.getTexts(s).get(i);
             }
         }
+//        title.setText(msg.getTitle());
+
+//        for(int i = 0; i < msg.getTexts(s).size(); i++) {
+//            if (i == 0) {
+//                messages = msg.getTexts(s).get(i);
+//            } else {
+//                messages = messages + "\n" + msg.getTexts(s).get(i);
+//            }
+//        }
+
+
 
         message.setText(messages);
 

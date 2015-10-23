@@ -66,7 +66,11 @@ public class MainActivity extends Activity {
                         curMsg = new MessageModel(packageName, title, text);
                         activeNotifications.put(packageName, curMsg);
                     } else {
-                        activeNotifications.get(packageName).addTextToList(text);
+                        if(activeNotifications.get(packageName).getTitles().contains(title)) {
+                            activeNotifications.get(packageName).addTextToList(text, title);
+                        } else {
+                            activeNotifications.get(packageName).addTitleToList(text, title);
+                        }
                     }
                 }
 
